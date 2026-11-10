@@ -6,7 +6,7 @@
 
 | 仓库 | 职责 | 可见性 |
 |---|---|---|
-| `/home/zsxc/zzq_work/4.code/ZSCamera_sdk` | 源码、测试、构建、内部文档、出包脚本 | 内部 |
+| 内部研发仓库（不对外） | 源码、测试、构建、内部文档、出包脚本 | 内部 |
 | `/home/zsxc/zzq_work/6.github/ZSCamera_sdk` | 文档、manifest、校验和、Release 二进制 | 按需（当前私有） |
 
 硬规则：

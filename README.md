@@ -274,7 +274,7 @@ dist/                  本地出包暂存，gitignore
 
 ## 10. 相关仓库
 
-- 内部研发仓库：`/home/zsxc/zzq_work/4.code/ZSCamera_sdk`（不对外）
+- 内部研发仓库（不对外，仅维护者可见）
 - 上位机工具：`zsibot-camera/ZSViewer`（按 UVDP v2 对应升级）
 - 平台驱动：`zsibot-camera/nvidia-jetson-camera-drivers`、
   `zsibot-camera/d-robotics-camera-drivers`

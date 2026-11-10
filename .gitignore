@@ -1,0 +1,39 @@
+# 发布资产只进 GitHub Releases，不进 git 历史
+dist/
+*.tar.gz
+*.tar.xz
+*.zip
+*.deb
+*.rpm
+*.AppImage
+
+# 构建产物
+build/
+build-*/
+cmake-build-*/
+CMakeCache.txt
+CMakeFiles/
+*.o
+*.a
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+*.pdb
+*.debug
+
+# 编辑器/系统
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*~
+
+# 禁止提交的敏感内容
+*.pem
+*.key
+*.p12
+.env
+secrets/
+calib_private/

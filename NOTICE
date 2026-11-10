@@ -1,0 +1,46 @@
+ZSCamera SDK — Third-Party Notices
+==================================
+
+本文件为草案，首个 Release 前必须由维护者完成许可复核并替换为最终文本。
+具体许可文本以各组件目录中的 LICENSE/COPYING、上游项目发布页或随包
+docs/licensing.md 为准。
+
+一、随包/链接的第三方组件
+
+| 组件 | 来源/用途 | 许可（需复核） | 分发方式 |
+|---|---|---|---|
+| LAS2-M / LiteAnyStereo | 双目视差模型与 TensorRT 推理参考 | 上游许可待确认 | 模型/代码片段随包或单独提供 |
+| OpenCV | 校正、图像处理、JPEG 软编 | Apache-2.0（4.x） | 客户系统库，不随包 |
+| zlib | 深度图压缩 | zlib License | 客户系统库或随包 |
+| prometheus-cpp | 指标导出（可选） | MIT（待复核） | 如启用则随包 |
+| rill | 历史 DAG 代码，仅 third_party 参考 | 上游许可待确认 | 不链接、不随包 |
+| RKNN Toolkit2 | RKNN 模型转换工具 | Rockchip 许可待确认 | 不随包 |
+| Eigen 等数学库 | LAS2 依赖（如使用） | MPL2 等（待复核） | 视链接方式随包/系统库 |
+
+二、不随包分发的系统组件
+
+以下组件由客户按平台自行安装，本仓库不提供二进制：
+
+- NVIDIA VPI 3 / VPI 4
+- NVIDIA TensorRT
+- NVIDIA CUDA
+- NVIDIA NVJPG / NvBufSurface
+- Rockchip RKNN Runtime / RKNPU 驱动
+- Rockchip MPP / RGA
+- OpenCV（如客户系统未提供，按平台包安装）
+
+三、模型
+
+- LAS2-M 模型权重、导出的 ONNX、TensorRT engine 的再分发受上游模型许可约束。
+- RKNN 模型的再分发受 Rockchip 工具链和训练数据/权重许可约束。
+- 无法确认再分发许可的模型不进入公开 Release；由交付人员按合同单独提供。
+
+四、商标
+
+NVIDIA、Jetson、TensorRT、CUDA 是 NVIDIA Corporation 的商标。
+Rockchip、RKNN、RV1126B 是 Rockchip Electronics Co., Ltd. 的商标。
+其他商标归各自所有者所有。
+
+五、联系方式
+
+许可问题请联系智身科技视觉传感器团队。

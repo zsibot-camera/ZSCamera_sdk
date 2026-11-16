@@ -17,12 +17,12 @@
 
 ## 1. 支持平台
 
-| 目标代号 | 硬件 | 系统 / SDK | 采集 | 深度 | 状态 |
-|---|---|---|---|---|---|
-| `host` | x86_64 Linux | Ubuntu 22.04+ | 回放/合成 | 桩 | 开发中 |
-| `orin-nx` | Jetson Orin NX | JetPack 6.2 / L4T 36.x | V4L2 + VPI3 | TensorRT LAS2-M | 开发中 |
-| `agx-thor` | Jetson AGX Thor | JetPack 7.x / L4T 39.x | V4L2 + VPI4 | TensorRT LAS2-M | 开发中 |
-| `rv1126b` | RV1126B | Buildroot Linux | V4L2 NV12 + RGA | RKNN | 开发中 |
+| 目标代号 | 硬件 | 系统 / SDK | 采集 | 状态 |
+|---|---|---|---|---|
+| `host` | x86_64 Linux | Ubuntu 22.04+ | 回放/合成 | 开发中 |
+| `orin-nx` | Jetson Orin NX | JetPack 6.2 / L4T 36.x | V4L2 + VPI3 | 开发中 |
+| `agx-thor` | Jetson AGX Thor | JetPack 7.x / L4T 39.x | V4L2 + VPI4 | 开发中 |
+| `rv1126b` | RV1126B | Buildroot Linux | V4L2 NV12 + RGA | 开发中 |
 
 > Orin NX 与 AGX Thor 的 VPI ABI、TensorRT engine 均不兼容，**不能共用一个包**。
 > 每个目标必须使用对应资产；版本不匹配时 SDK 会明确报错，不要强行混用。

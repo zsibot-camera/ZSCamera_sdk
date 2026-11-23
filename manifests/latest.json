@@ -1,5 +1,108 @@
 {
   "schema": 1,
-  "latest": null,
-  "releases": []
+  "latest": "1.0.1",
+  "releases": [
+    {
+      "version": "1.0.1",
+      "tag": "v1.0.1",
+      "date": "2026-11-23",
+      "protocol": 2,
+      "status": "stable",
+      "targets": [
+        "host",
+        "orin-nx",
+        "agx-thor"
+      ],
+      "assets": [
+        {
+          "name": "zscamera-runtime-1.0.1-linux-aarch64-agx-thor.tar.gz",
+          "kind": "runtime",
+          "target": "agx-thor",
+          "os": "linux",
+          "arch": "aarch64",
+          "size": 560355,
+          "sha256": "c0ccd1a66944761aaebebab8ad122b88d6c2d4037122cde0a77c3227865fddf9",
+          "min_system": "JetPack 7.x / L4T 39.x",
+          "model_version": null
+        },
+        {
+          "name": "zscamera-runtime-1.0.1-linux-aarch64-orin-nx.tar.gz",
+          "kind": "runtime",
+          "target": "orin-nx",
+          "os": "linux",
+          "arch": "aarch64",
+          "size": 546234,
+          "sha256": "76fae410c48a585e3b8cf0123d0a4883053dc0d1c51e68bb9bdaecbf479ea773",
+          "min_system": "JetPack 6.2 / L4T 36.x",
+          "model_version": null
+        },
+        {
+          "name": "zscamera-sdk-1.0.1-linux-aarch64-agx-thor-dev.tar.gz",
+          "kind": "sdk",
+          "target": "agx-thor",
+          "os": "linux",
+          "arch": "aarch64",
+          "size": 938209,
+          "sha256": "3abfc85eb54abf05ca522b85f9cf40c0d2b07fe1dda87a9e2058263f0c0872aa",
+          "min_system": "JetPack 7.x / L4T 39.x",
+          "model_version": null
+        },
+        {
+          "name": "zscamera-sdk-1.0.1-linux-aarch64-orin-nx-dev.tar.gz",
+          "kind": "sdk",
+          "target": "orin-nx",
+          "os": "linux",
+          "arch": "aarch64",
+          "size": 924404,
+          "sha256": "82cdcbc93e1c31be263988f9d04af5c4af0c61d4ffe63e33700b450b556d89f9",
+          "min_system": "JetPack 6.2 / L4T 36.x",
+          "model_version": null
+        },
+        {
+          "name": "zscamera-sdk-1.0.1-linux-x86_64-host-dev.tar.gz",
+          "kind": "sdk",
+          "target": "host",
+          "os": "linux",
+          "arch": "x86_64",
+          "size": 882327,
+          "sha256": "182c50e48f8aa5df652812eaa3aeef6c23b8871a436de77d4c28ef94073bd8d1",
+          "min_system": "Ubuntu 22.04+ (x86_64)",
+          "model_version": null
+        },
+        {
+          "name": "zscamera-tools-1.0.1-linux-aarch64-agx-thor.tar.gz",
+          "kind": "tools",
+          "target": "agx-thor",
+          "os": "linux",
+          "arch": "aarch64",
+          "size": 669101,
+          "sha256": "a68c6750061d0839d910cdd5d948caae3e9da1decc84805b37442ab97910fcf8",
+          "min_system": "JetPack 7.x / L4T 39.x",
+          "model_version": null
+        },
+        {
+          "name": "zscamera-tools-1.0.1-linux-aarch64-orin-nx.tar.gz",
+          "kind": "tools",
+          "target": "orin-nx",
+          "os": "linux",
+          "arch": "aarch64",
+          "size": 656814,
+          "sha256": "a008af547258548227e3e2b25349f1c66171f0fde24edbbe56e45222b12a2797",
+          "min_system": "JetPack 6.2 / L4T 36.x",
+          "model_version": null
+        },
+        {
+          "name": "zscamera-tools-1.0.1-linux-x86_64-host.tar.gz",
+          "kind": "tools",
+          "target": "host",
+          "os": "linux",
+          "arch": "x86_64",
+          "size": 645086,
+          "sha256": "fca21c541ce7efd47f306f447aa0a50cde149df37913b38c88e86c476e2eeb32",
+          "min_system": "Ubuntu 22.04+ (x86_64)",
+          "model_version": null
+        }
+      ]
+    }
+  ]
 }

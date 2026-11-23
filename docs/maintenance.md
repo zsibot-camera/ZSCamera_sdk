@@ -58,7 +58,7 @@
 - [ ] 包名符合 [`packages.md`](packages.md) 的命名规则。
 - [ ] `tar -tzf` 检查无 `src/`、`.debug`、`CMakeCache`、内部路径。
 - [ ] `ldd`/`nm`/`strings` 检查无内部构建路径和内部符号。
-- [ ] dev 包 `examples/` 可独立编译。
+- [ ] dev 包可用 `find_package(zscamera)` 编译并链接一个最小程序。
 - [ ] engine/模型与目标板匹配，`MODEL_INFO` 已写。
 - [ ] 生成 `SHA256SUMS` 并自检通过。
 
@@ -112,7 +112,7 @@ tmp=$(mktemp -d)
 gh release download vX.Y.Z --dir "$tmp"
 (cd "$tmp" && sha256sum -c SHA256SUMS)
 tar -xzf "$tmp"/zscamera-sdk-...-dev.tar.gz -C "$tmp"
-# 用 examples 编译一次；runtime 包上板启动一次
+# 用最小程序做一次 find_package 编译；runtime 包上板启动一次
 rm -rf "$tmp"
 ```
 

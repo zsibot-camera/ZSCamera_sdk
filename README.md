@@ -7,11 +7,12 @@
 > 这里只发布：公开 C++ 头文件、预编译库、板端程序、模型、配置、协议/使用文档和校验和。
 > 源码、测试、构建脚本和内部文档在内部研发仓库维护，不对外释放。
 
-当前状态：**v0.1.0 开发中，尚未发布二进制包**。下表是发布矩阵，实际资产以下载页
-（GitHub Releases）为准。
+当前版本：**v1.0.1**（2026-11-23）。下载：
+[GitHub Releases](https://github.com/zsibot-camera/ZSCamera_sdk/releases/tag/v1.0.1)。
 
-> 仓库已公开，但尚未发布二进制包。首个 Release 前请勿引用未发布资产；未完成包和
-> 未经许可复核的模型不会上传。
+本版发布 `host`、`orin-nx`、`agx-thor` 的 dev/runtime/tools 包。RV1126B 目标已支持
+构建，但 P3 板端验收完成前不发布公开包；公开包不随附模型/engine，许可确认后由
+交付人员单独提供。
 
 ---
 
@@ -19,10 +20,10 @@
 
 | 目标代号 | 硬件 | 系统 / SDK | 采集 | 状态 |
 |---|---|---|---|---|
-| `host` | x86_64 Linux | Ubuntu 22.04+ | 回放/合成 | 开发中 |
-| `orin-nx` | Jetson Orin NX | JetPack 6.2 / L4T 36.x | V4L2 + VPI3 | 开发中 |
-| `agx-thor` | Jetson AGX Thor | JetPack 7.x / L4T 39.x | V4L2 + VPI4 | 开发中 |
-| `rv1126b` | RV1126B | Buildroot Linux | V4L2 NV12 + RGA | 开发中 |
+| `host` | x86_64 Linux | Ubuntu 22.04+ | 回放/合成 | 已发布 1.0.1 |
+| `orin-nx` | Jetson Orin NX | JetPack 6.2 / L4T 36.x | V4L2 + VPI3 | 已发布 1.0.1（VPI 生产包） |
+| `agx-thor` | Jetson AGX Thor | JetPack 7.x / L4T 39.x | V4L2 + VPI4 | 已发布 1.0.1 |
+| `rv1126b` | RV1126B | Buildroot Linux | V4L2 NV12 + RGA | 内部验证（P3 后发布） |
 
 > Orin NX 与 AGX Thor 的 VPI ABI、TensorRT engine 均不兼容，**不能共用一个包**。
 > 每个目标必须使用对应资产；版本不匹配时 SDK 会明确报错，不要强行混用。
@@ -39,6 +40,9 @@
 | orin-nx | `zscamera-sdk-<ver>-linux-aarch64-orin-nx-dev.tar.gz` | `zscamera-runtime-<ver>-linux-aarch64-orin-nx.tar.gz` | `zscamera-tools-<ver>-linux-aarch64-orin-nx.tar.gz` |
 | agx-thor | `zscamera-sdk-<ver>-linux-aarch64-agx-thor-dev.tar.gz` | `zscamera-runtime-<ver>-linux-aarch64-agx-thor.tar.gz` | `zscamera-tools-<ver>-linux-aarch64-agx-thor.tar.gz` |
 | rv1126b | `zscamera-sdk-<ver>-linux-aarch64-rv1126b-dev.tar.gz` | `zscamera-runtime-<ver>-linux-aarch64-rv1126b.tar.gz` | `zscamera-tools-<ver>-linux-aarch64-rv1126b.tar.gz` |
+
+> v1.0.1 实际发布 host / orin-nx / agx-thor；rv1126b 包在 P3 板端验收后发布。
+> 公开包不包含模型/engine，runtime 的 `models/README.md` 说明获取方式。
 
 选择规则：
 
@@ -58,11 +62,11 @@
 ```text
 zscamera-sdk-<ver>-.../
 ├── include/zscamera/*.hpp     # 公开 API 头文件（不是实现源码）
-├── lib/libzscamera.so*        # 预编译库
+├── lib/libzscamera.a          # 预编译静态库
 ├── lib/cmake/zscamera/        # find_package(zscamera) 配置
-├── examples/                  # 最小客户程序示例
-├── docs/                      # API/协议/标定/移植说明
-├── LICENSE  NOTICE  VERSION  SHA256SUMS
+├── share/zscamera/config/     # 各目标参考配置
+├── docs/                      # 协议/标定/移植说明
+├── LICENSE  NOTICE  VERSION
 ```
 
 不含 `src/`、内部头文件、测试、构建脚本、调试符号表。
@@ -72,11 +76,9 @@ zscamera-sdk-<ver>-.../
 ```text
 zscamera-runtime-<ver>-.../
 ├── bin/zscamera_stream        # 板端常驻程序（UVDP v2 服务端）
-├── lib/                       # 运行所需自研库
-├── config/<target>.conf       # 该目标的默认配置
-├── models/                    # 该目标的 RKNN / TensorRT engine（如许可允许）
-├── scripts/                   # 启动/停止/自检
-└── docs/quickstart.md
+├── config/<target>.conf       # 目标配置（orin-nx 另带 orin_nx_ros.conf）
+├── models/README.md           # 公开包不随附模型；说明获取/生成方式
+└── docs/                      # 部署、协议、标定文档
 ```
 
 VPI、TensorRT、CUDA、RKNN、MPP、RGA 等系统库**不随包提供**，按兼容矩阵安装。
@@ -108,7 +110,8 @@ sudo tar -xzf zscamera-runtime-<ver>-linux-aarch64-<target>.tar.gz -C /opt/zscam
 sudo /opt/zscamera/bin/zscamera_stream --config /opt/zscamera/config/<target>.conf
 ```
 
-默认 UVDP v2 端口为 TCP `9600`。启动后用工具确认：
+Orin NX 工具模式用 `orin_nx_vpi.conf`，ROS 模式用 `orin_nx_ros.conf`；AGX Thor 用
+`agx_thor.conf`。默认 UVDP v2 端口为 TCP `9600`。启动后用工具确认：
 
 ```bash
 zscamera_probe <board-ip>:9600
@@ -125,11 +128,11 @@ target_link_libraries(your_app PRIVATE zscamera::zscamera)
 #include <zscamera/zscamera.hpp>
 
 zscamera::Runtime runtime;
-// 按 docs/api 与 examples/ 初始化设备、订阅流、处理 FrameSet
+// 按包内 docs/ 初始化设备、订阅流、处理 FrameSet
 ```
 
-编译时使用 dev 包内头文件和库；运行时确保 `libzscamera.so` 在 `LD_LIBRARY_PATH`
-或系统库路径中。完整 API 和协议见包内 `docs/`。
+dev 包提供静态库 `libzscamera.a` 与 CMake 配置，客户程序静态链接，无需设置
+`LD_LIBRARY_PATH`；升级 SDK 后需重新编译。完整 API 和协议见包内 `docs/`。
 
 ### 4.4 常见问题
 
@@ -153,11 +156,12 @@ zscamera::Runtime runtime;
 
 | SDK | UVDP | 目标 | 系统 | VPI | TensorRT | RKNN | 模型 | ZSViewer |
 |---|---|---|---|---|---|---|---|---|
-| 0.1.x | 2 | orin-nx | L4T 36.x | 3.x | 10.x | — | LAS2-M | 待发布时确认 |
-| 0.1.x | 2 | agx-thor | L4T 39.x | 4.x | 10.x | — | LAS2-M | 待发布时确认 |
-| 0.1.x | 2 | rv1126b | Buildroot | — | — | 2.x | 双目模型 | 待发布时确认 |
+| 1.0.x | 2 | host | Ubuntu 22.04+ | — | — | — | 桩/回放 | 2.1.4 |
+| 1.0.x | 2 | orin-nx | JetPack 6.2 / L4T 36.x | 3.x | 10.x | — | 不随公开包 | 2.1.4 |
+| 1.0.x | 2 | agx-thor | JetPack 7.x / L4T 39.x | 4.x | 10.x | — | 不随公开包 | 2.1.4 |
+| 1.0.x | 2 | rv1126b | Buildroot | — | — | 2.x | 待交付（内部验证） | 2.1.4 |
 
-> 表中版本是目标值，最终以对应 Release 的 `docs/compatibility.md` 为准。
+> 表中版本是本版实测环境；完整矩阵见 [`docs/compatibility.md`](docs/compatibility.md)。
 
 ---
 
@@ -167,9 +171,9 @@ zscamera::Runtime runtime;
 
 | 包类型 | 是否必需 | 内容 | 说明 |
 |---|---|---|---|
-| `sdk-...-dev` | 是 | 头文件、`.so`、CMake config、examples | 客户集成用；不含实现源码 |
-| `runtime-...` | 是（板端目标） | `zscamera_stream`、库、配置、模型 | 板端部署 |
-| `tools-...` | 是 | probe/calib/demo | 现场诊断 |
+| `sdk-...-dev` | 是 | 头文件、`libzscamera.a`、CMake config | 客户集成用；不含实现源码 |
+| `runtime-...` | 是（板端目标） | `zscamera_stream`、目标配置、models 说明 | 板端部署 |
+| `tools-...` | 是 | probe/calib/ota/demo | 现场诊断 |
 | `models-...` | 可选 | RKNN / ONNX / engine | 模型单独升级时发布 |
 | `debug-symbols` | 否 | `.debug` 符号 | **仅内部**，不进交付仓库 |
 
@@ -215,7 +219,7 @@ gh release create v<ver> dist/<ver>/* \
 ### 7.3 发布后
 
 1. 从 Release 重新下载一个 dev 包和一个 runtime 包，校验 `sha256sum`。
-2. 解压 dev 包，用 `examples/` 做一次 `find_package` + 编译 + 运行。
+2. 解压 dev 包，用最小程序做一次 `find_package` + 编译 + 链接。
 3. 板上用 runtime 包启动，`zscamera_probe` 确认流和标定状态。
 4. 更新 `manifests/latest.json` 指向新版本；确认 README 下载表无误。
 5. 通知 ZSViewer/交付/客户支持对应版本与最低工具版本。
@@ -254,7 +258,7 @@ docs/
 manifests/
   latest.json          当前最新版本与资产索引
   vX.Y.Z.json          每个版本的资产、sha256、目标、依赖版本
-examples/              客户集成示例（不含实现源码）
+examples/              客户示例说明（按版本补充）
 dist/                  本地出包暂存，gitignore
 ```
 
@@ -263,8 +267,7 @@ dist/                  本地出包暂存，gitignore
 ## 9. 许可与支持
 
 本 SDK 为智身科技专有软件，仅授权客户在约定范围内使用；不得复制、再分发、
-反向工程或向第三方披露。第三方组件和模型许可见 [`NOTICE`](NOTICE) 及包内
-`docs/licensing.md`。
+反向工程或向第三方披露。第三方组件和模型许可见 [`NOTICE`](NOTICE)。
 
 - 交付/商务：联系智身科技视觉传感器团队
 - 问题反馈：GitHub Issues（不要贴密码、token、客户数据）

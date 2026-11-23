@@ -12,7 +12,7 @@ zscamera-<kind>-<version>-<os>-<arch>-<target>[-<variant>].tar.gz
 | 字段 | 取值 | 说明 |
 |---|---|---|
 | `kind` | `sdk` / `runtime` / `tools` / `models` | 包类型 |
-| `version` | `0.1.0`、`0.1.1-rc.1` | 不带 `v` 前缀；tag 才带 `v` |
+| `version` | `1.0.1`、`1.0.2-rc.1` | 不带 `v` 前缀；tag 才带 `v` |
 | `os` | `linux` | 当前只发布 Linux |
 | `arch` | `x86_64` / `aarch64` | host 为 x86_64，板端为 aarch64 |
 | `target` | `host` / `orin-nx` / `agx-thor` / `rv1126b` | 一个包只服务一个目标 |
@@ -21,10 +21,10 @@ zscamera-<kind>-<version>-<os>-<arch>-<target>[-<variant>].tar.gz
 示例：
 
 ```text
-zscamera-sdk-0.1.0-linux-aarch64-agx-thor-dev.tar.gz
-zscamera-runtime-0.1.0-linux-aarch64-agx-thor.tar.gz
-zscamera-tools-0.1.0-linux-aarch64-agx-thor.tar.gz
-zscamera-models-0.1.0-agx-thor.tar.gz
+zscamera-sdk-1.0.1-linux-aarch64-agx-thor-dev.tar.gz
+zscamera-runtime-1.0.1-linux-aarch64-agx-thor.tar.gz
+zscamera-tools-1.0.1-linux-aarch64-agx-thor.tar.gz
+zscamera-models-1.0.1-agx-thor.tar.gz
 ```
 
 禁止的命名：
@@ -39,49 +39,46 @@ zscamera-models-0.1.0-agx-thor.tar.gz
 
 ```text
 include/zscamera/           公开 API 头文件
-lib/libzscamera.so.<ver>    预编译共享库
-lib/libzscamera.so          soname 软链
+lib/libzscamera.a           预编译静态库
 lib/cmake/zscamera/         zscameraConfig.cmake 等
-examples/                   CMake + 最小客户端示例
-docs/                       API、协议、标定、安装说明
-LICENSE  NOTICE  VERSION  SHA256SUMS
+share/zscamera/config/      各目标参考配置
+docs/                       协议、标定、移植与安装说明
+LICENSE  NOTICE  VERSION
 ```
 
 约束：
 
 - 头文件只能来自 `include/zscamera/`；不得带内部头文件。
-- `libzscamera.so` 的依赖只有系统库和目标平台 SDK 库；不打包 VPI/TensorRT/CUDA/RKNN/MPP/RGA。
+- `libzscamera.a` 的目标文件只依赖系统库和目标平台 SDK 库；不打包 VPI/TensorRT/CUDA/RKNN/MPP/RGA。
 - 不包含 `src/`、测试、构建脚本、`.debug` 文件、CMake 构建缓存。
-- `examples/` 只能是客户示例，不得复制内部测试/工具源码。
+- 客户示例与 API 用法随交付仓库 `examples/` 更新，不把内部测试/工具源码放进包。
 
 ### 2.2 runtime 包
 
 ```text
 bin/zscamera_stream
-lib/                        运行所需 .so（自研）
-config/<target>.conf        默认 profile
-models/                     该目标模型/engine（许可允许时）
-scripts/start.sh stop.sh selfcheck.sh
-docs/quickstart.md
-LICENSE  NOTICE  VERSION  SHA256SUMS
+config/<target>.conf        目标 profile（orin-nx 另带 orin_nx_ros.conf）
+models/README.md            公开包不随附模型/engine；说明获取与生成方式
+docs/                       部署、协议、标定文档
+LICENSE  NOTICE  VERSION
 ```
 
 约束：
 
-- `zscamera_stream` 只链接包内库和系统库，不引用内部构建路径。
+- `zscamera_stream` 为静态链接，只依赖系统库；不引用内部构建路径。
 - 配置中的相对路径按配置文件目录解析；默认安装目录 `/opt/zscamera`。
-- 模型与目标板严格绑定；`models/` 中附 `MODEL_INFO`（模型名、版本、输入尺寸、精度、生成环境）。
-- 不能分发的模型不放入包，`models/README` 说明获取方式。
+- 模型与目标板严格绑定；单独发布 models 包时附 `MODEL_INFO`（模型名、版本、输入尺寸、精度、生成环境）。
+- 公开包在许可确认前不放入模型；`models/README.md` 说明获取方式，engine 必须在目标板生成。
 
 ### 2.3 tools 包
 
 ```text
 bin/zscamera_probe
 bin/zscamera_calib
+bin/zscamera_ota
 bin/zscamera_demo
-lib/                        工具依赖的自研库
-docs/tools.md
-LICENSE  NOTICE  VERSION  SHA256SUMS
+docs/                       协议、标定与工具接入文档
+LICENSE  NOTICE  VERSION
 ```
 
 ### 2.4 models 包（可选）
@@ -104,18 +101,18 @@ LICENSE  NOTICE
 ```json
 {
   "schema": 1,
-  "latest": "0.1.0",
+  "latest": "1.0.1",
   "releases": [
     {
-      "version": "0.1.0",
-      "tag": "v0.1.0",
-      "date": "2026-11-10",
+      "version": "1.0.1",
+      "tag": "v1.0.1",
+      "date": "2026-11-23",
       "protocol": 2,
       "status": "stable",
-      "targets": ["host", "orin-nx", "agx-thor", "rv1126b"],
+      "targets": ["host", "orin-nx", "agx-thor"],
       "assets": [
         {
-          "name": "zscamera-sdk-0.1.0-linux-aarch64-agx-thor-dev.tar.gz",
+          "name": "zscamera-sdk-1.0.1-linux-aarch64-agx-thor-dev.tar.gz",
           "kind": "sdk",
           "target": "agx-thor",
           "os": "linux",
@@ -123,7 +120,7 @@ LICENSE  NOTICE
           "size": 12345678,
           "sha256": "…64 hex…",
           "min_system": "L4T 39.x / JetPack 7.x",
-          "model_version": "las2-m-1.0"
+          "model_version": null
         }
       ]
     }
@@ -146,15 +143,15 @@ LICENSE  NOTICE
 每个 Release 附带一个 `SHA256SUMS`，覆盖该版本所有资产：
 
 ```text
-<sha256>  zscamera-sdk-0.1.0-linux-aarch64-agx-thor-dev.tar.gz
-<sha256>  zscamera-runtime-0.1.0-linux-aarch64-agx-thor.tar.gz
+<sha256>  zscamera-sdk-1.0.1-linux-aarch64-agx-thor-dev.tar.gz
+<sha256>  zscamera-runtime-1.0.1-linux-aarch64-agx-thor.tar.gz
 ...
 ```
 
 生成方式：
 
 ```bash
-cd dist/0.1.0
+cd dist/1.0.1
 sha256sum zscamera-* > SHA256SUMS
 sha256sum -c SHA256SUMS
 ```
@@ -171,7 +168,7 @@ sha256sum -c SHA256SUMS
 
 ```text
 dist/
-└── 0.1.0/
+└── 1.0.1/
     ├── zscamera-sdk-...
     ├── zscamera-runtime-...
     ├── zscamera-tools-...
@@ -191,7 +188,7 @@ tar -tzf zscamera-sdk-<ver>-...-dev.tar.gz | grep -E '(^|/)src/|\.debug$|CMakeCa
 
 命中任一模式说明包不干净，禁止发布。再检查：
 
-- `ldd lib/libzscamera.so` 不出现内部构建路径。
-- `nm -D --defined-only lib/libzscamera.so` 不含内部符号前缀（如 `rill::`）。
+- `strings lib/libzscamera.a` 不出现构建机用户名/主机名/内部路径。
+- `nm --defined-only lib/libzscamera.a` 不含内部符号前缀（如 `rill::`），只导出公开 API 符号。
 - `readelf -p .comment`、`strings` 不泄露用户名/主机名/内部路径。
-- dev 包头文件能独立编译 `examples/`。
+- dev 包能用 `find_package(zscamera)` 编译并链接一个最小程序。
